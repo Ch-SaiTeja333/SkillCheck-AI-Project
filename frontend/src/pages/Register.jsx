@@ -20,6 +20,7 @@ function Register() {
     }
     catch (err) {  
       if(err.response){
+        console.log("sgfghh")
         toast.error(err.response.data.message);
       }
       console.log(err.message,'err in register submit form [FRONTEND]...');
