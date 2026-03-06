@@ -1,5 +1,5 @@
 import React from 'react'
-import {createBrowserRouter, RouterProvider} from 'react-router';
+import {createBrowserRouter, RouterProvider} from 'react-router-dom';
 import Login from '../pages/Login.jsx';
 import Register from '../pages/Register.jsx';
 import Quiz from '../pages/Quiz.jsx';
@@ -10,6 +10,7 @@ import Logout from '../pages/Logout.jsx';
 import Contact from '../pages/Contact.jsx'; 
 import About from '../pages/About.jsx';
 import Profile from '../pages/Profile.jsx';
+import AttemptQuiz from '../pages/AttemptQuiz.jsx';
 function Routing() {
   const browserRouterObj=createBrowserRouter([{
    path:'/',
@@ -50,6 +51,10 @@ function Routing() {
     {
         path:'about',
         element:<About></About>
+    },
+    {
+        path:'attempt-quiz',
+        element:<AttemptQuiz></AttemptQuiz>
     }
    ]
   }])

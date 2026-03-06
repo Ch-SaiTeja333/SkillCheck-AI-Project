@@ -20,13 +20,14 @@ const questionSchema = new mongoose.Schema({
     //Questions array AI prompt
     questions:[],
     // options
-    options:{
+    options:{ 
         // 1 user selected[]
         userOptions:[],
-        // 2 AI prompt[]
-        correctOptions:[]
+        // 2 corerct answer[] AI prompt
+        correctOptions:[],
+        // 3 options for user to select AI prompt
+        availableOptions:[]
     },
-    
     //score
     score:{
         type:Number,

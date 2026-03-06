@@ -12,6 +12,7 @@ questionsRoutes.post('/generate',async(req,res)=>{
         let aiResponse=await runApi(prompt);
         const parsed = JSON.parse(aiResponse);
         // Save to database
+        console.log('Parsed AI Response:', parsed);
         const questionsData = {
             topic:topic,
             difficultyLevel:difficultyLevel,
@@ -19,7 +20,8 @@ questionsRoutes.post('/generate',async(req,res)=>{
             questions: parsed.map(item => item.question),
             options: {
                 userOptions: [],
-                correctOptions: parsed.map(item => item.correctAnswer)
+                correctOptions: parsed.map(item => item.correctAnswer),
+                availableOptions:parsed.map(item => item.options)
             },
             score: 0,
             percentage: 0,
