@@ -55,7 +55,7 @@ userRoutes.post("/login", async (req, res) => {
       });
     }
 
-    let token = sign({ payload: userDetails }, "abcde", { expiresIn: "1d" });
+    let token = sign({ payload: {...userDetails,id:isExist._id} }, "abcde", { expiresIn: "1d" });
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -96,6 +96,7 @@ userRoutes.post("/logout", verifyToken, (req, res) => {
 userRoutes.get("/me", verifyToken, (req, res) => {
   try {
     let user = req.user;
+    // console.log(user)
     return res.status(200).json({
       message: "user profile fetched successfully",
       payload: user,

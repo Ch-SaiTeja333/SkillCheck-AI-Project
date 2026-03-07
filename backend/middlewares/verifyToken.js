@@ -4,6 +4,7 @@ export const verifyToken=(req,res,next)=>{
     try {
         let userToken=req.cookies?.token;
         if(userToken == null){
+            console.log("please login...")
             return res.status(400).json({
                 message:'please login...'
             })
@@ -11,8 +12,10 @@ export const verifyToken=(req,res,next)=>{
         try {
             let decoded=verify(userToken,'abcde');
             req.user=decoded.payload;
+            // console.log(req.user);
             next();
         } catch (err) {
+            console.log(err)
             return res.status(400).json({message:`session expired please login again...`});
         }
     } catch (err) {

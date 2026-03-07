@@ -5,23 +5,22 @@ import Routing from "./components/Routing.jsx";
 import { useAuthStore } from "./store/authStore.js";
 
 function App() {
-  // const setUser = useAuthStore((s) => s.setUser);
-  // async function me() {
-  //   try {
-  //     let res = await axios.get("http://localhost:8080/user-api/me", {
-  //       withCredentials: true,
-  //     });
-  //     if (res.status === 200) {
-  //       setUser(res.data.payload.user);
-  //     }
-  //   } catch (err) {
-  //     console.log(err, "err in login submit form [FRONTEND]...");
-  //   }
-  // }
+  const setUser = useAuthStore((s) => s.setUser);
+  async function me() {
+    try {
+      let res = await axios.get("http://localhost:8080/user-api/me", {
+        withCredentials: true,
+      });
+      // console.log(res);
+      setUser(res.data.payload);
+    } catch (err) {
+      console.log(err, "err in login submit form [FRONTEND]...");
+    }
+  }
 
-  // useEffect(() => {
-  //   me();
-  // }, []);
+  useEffect(() => {
+    me();
+  }, []);
 
   return (
     <div>
