@@ -59,13 +59,13 @@ userRoutes.post("/login", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "none",
-      secure: true,
+      sameSite: "lax",
+      secure: false,
     });
 
     return res.status(200).json({
       message: "user logged in successfully",
-      payload: { user: userDetails, token: token },
+      payload: { user: {...userDetails,id:isExist._id}, token: token},
     });
   } catch (err) {
     return res.status(500).json({
@@ -97,6 +97,7 @@ userRoutes.get("/me", verifyToken, (req, res) => {
   try {
     let user = req.user;
     // console.log(user)
+
     return res.status(200).json({
       message: "user profile fetched successfully",
       payload: user,

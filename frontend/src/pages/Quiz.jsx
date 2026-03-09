@@ -17,6 +17,7 @@ function Quiz() {
 
   function submitForm(obj) {
     navigate('/attempt-quiz',{state:obj});
+    // console.log(obj);
   }
 
   return (

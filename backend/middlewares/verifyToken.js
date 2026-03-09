@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 const {verify}=jwt;
 export const verifyToken=(req,res,next)=>{
     try {
+        // console.log("cookies:", req.cookies);
         let userToken=req.cookies?.token;
         if(userToken == null){
             console.log("please login...")
@@ -11,7 +12,7 @@ export const verifyToken=(req,res,next)=>{
         }
         try {
             let decoded=verify(userToken,'abcde');
-            req.user=decoded.payload;
+            req.user=decoded;
             // console.log(req.user);
             next();
         } catch (err) {

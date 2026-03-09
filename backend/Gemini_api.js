@@ -20,9 +20,9 @@ export const runApi = async (promptText) => {
       // model:"gemini-2.5-pro-preview-tts",
       // model: "gemini-2.5-flash",
       // model: "gemini-2.5-flash-lite",
+       model:"gemini-2.5-pro",
 
       
-      // models/gemini-2.5-pro
       // models/gemini-2.0-flash
       // models/gemini-2.0-flash-001
       // models/gemini-2.0-flash-exp-image-generation

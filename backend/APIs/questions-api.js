@@ -5,8 +5,10 @@ export const questionsRoutes = Router();
 import { buildPrompt, runApi, buildFeedbackPrompt } from "../Gemini_api.js";
 import { questionsModel } from "../models/questions-model.js";
 import mongoose from "mongoose";
-questionsRoutes.post("/generate", async (req, res) => {
+questionsRoutes.post("/generate/:id", async (req, res) => {
   try {
+    let { id } = req.params;
+    // console.log('id....',id);
     let { topic, difficultyLevel, numberOfQuestions } = req.body;
     let prompt = buildPrompt(topic, difficultyLevel, numberOfQuestions);
     let aiResponse = await runApi(prompt);
@@ -19,7 +21,7 @@ questionsRoutes.post("/generate", async (req, res) => {
     // Save to database
     // console.log('Parsed AI Response:', parsed);
     const questionsData = {
-      userId: req.user.id,
+      userId: id,
       topic: topic,
       difficultyLevel: difficultyLevel,
       numberQuestions: numberOfQuestions,
@@ -110,7 +112,20 @@ questionsRoutes.put("/feedback", async (req, res) => {
   }
 });
 
+questionsRoutes.get("/get-feedback/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const record = await questionsModel.findById(id);
+    if (!record) {
+      return res.status(404).json({ message: "Questions not found" });
+    }           
+    res.status(200).json({message:'Feedback fetched successfully', payload: record.feedback});
+  } catch (err) {
+    console.log("err in getting feedback--questions-api Backend...",err.message);
+    res.status(500).json({ message: err.message });
+  }
 
+});
     
 // feedback ```json
 // {

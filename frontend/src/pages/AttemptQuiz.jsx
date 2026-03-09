@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-
+import { useAuthStore } from "../store/authStore";
+import { ClipLoader } from "react-spinners";
+import Feedback from "../components/Feedback";
 function AttemptQuiz() {
   const location = useLocation();
   const data = location.state;
+  const { user } = useAuthStore();
   // console.log("data in attempt",data)
+  // console.log(user,".......................................")
   const [resdata, setResdata] = useState(null);
   const [userAnswers, setUserAnswers] = useState([]);
   const [docId, setDocId] = useState(null);
-  const [error, setError] = useState("");
+  const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
+  // console.log("current  user :........",user);
   async function getQuestions() {
       try {
           let res = await axios.post(
-          "http://localhost:8080/questions-api/generate",
+          `http://localhost:8080/questions-api/generate/${user.id}`,
           data,
           { withCredentials: true }
           );
-        // console.log("res  ...", res.data.payload.docId);
+        // console.log("res  ...", res.data.payload);
         setDocId(res.data.payload._id);
         setResdata(res.data.payload);
         // initialize user answers
@@ -79,6 +84,7 @@ function AttemptQuiz() {
     try{
       let res=await axios.put('http://localhost:8080/questions-api/feedback',{id:docId},{withCredentials:true});
       console.log('Feedback updated successfully', res.data);  
+      setIsFeedbackVisible(true);
     }
     catch(err){
       console.log('err in feedback updation .... [frontend]',err.message);
@@ -86,11 +92,19 @@ function AttemptQuiz() {
   }
   
   if (!resdata) {
-      return <h3 className="text-center mt-5">Generating Questions...</h3>;
+      return 
+      <div>
+        <h3 className="text-center mt-5">Generating Questions...</h3>;
+          <div style={{ textAlign: "center", marginTop: "40px" }}>
+            <ClipLoader size={50} />
+          </div>
+      </div>
   }
 
   return ( 
+
     <div className="w-50 mx-auto mt-5">
+
       <h2 className="text-center mb-4">Attempt Quiz</h2>
       <div className='d-flex justify-content-evenly'>
         <p><b>Topic:</b> {data.topic}</p>
@@ -117,12 +131,12 @@ function AttemptQuiz() {
         </div>
       ))
     }
-
     <div className="text-center mt-4">
       <button className="btn btn-success" onClick={submitQuiz}>
         Submit Quiz
       </button>
     </div>
+      {isFeedbackVisible && <Feedback docId={docId} />}
     </div>
 
   );
