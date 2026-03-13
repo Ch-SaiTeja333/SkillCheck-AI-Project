@@ -36,8 +36,8 @@ function Navbar() {
     }
   }
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-      <div className="container-fluid">
+    <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm ">
+      <div className="container-fluid ">
         <Link className="navbar-brand fw-bold" to="/">
           SkillCheck AI 
         </Link>

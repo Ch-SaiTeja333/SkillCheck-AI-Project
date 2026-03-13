@@ -17,7 +17,6 @@ function Quiz() {
 
   function submitForm(obj) {
     navigate('/attempt-quiz',{state:obj});
-    // console.log(obj);
   }
 
   return (
@@ -91,9 +90,7 @@ function Quiz() {
                   Login Required
                 </h2>
                 <p className="text-muted">
-                  You must be logged in to access the quiz section. Logging in allows
-                  you to attempt quizzes, track your performance, and improve your
-                  skills through personalized assessments.
+                  You must be logged in to access the quiz section. 
                 </p>
                 <div className="alert alert-info text-start mt-4">
                   <h6 className="fw-bold">Why login?</h6>
@@ -105,9 +102,10 @@ function Quiz() {
                     <li>Get personalized quiz recommendations</li>
                   </ul>
                 </div>
+                {/* <p> otherwise CreateAccount</p> */}
                 <div className="mt-4">
                   <Link to="/login">
-                    <button className="btn btn-primary px-4 me-3">
+                    <button className="btn btn-outline-primary px-4 me-3">
                       Login
                     </button>
                   </Link>

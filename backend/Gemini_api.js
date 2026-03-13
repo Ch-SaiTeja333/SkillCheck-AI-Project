@@ -1,11 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
-import 'dotenv/config';
+import "dotenv/config";
 
 // 1. Setup the Client
 // Use 'v1' or 'v1beta' based on your regional availability
-const ai = new GoogleGenAI({ 
+const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
- 
 });
 
 /**
@@ -16,15 +15,14 @@ export const runApi = async (promptText) => {
     // Note: The model name from your list is 'models/gemini-2.5-flash'
     // You can usually omit the 'models/' prefix.
     const response = await ai.models.generateContent({
-      // model: "gemini-flash-latest", 
+      // model: "gemini-flash-latest",
       // model:"gemini-2.5-pro-preview-tts",
       // model: "gemini-2.5-flash",
-      // model: "gemini-2.5-flash-lite",
-       model:"gemini-2.5-pro",
+      model: "gemini-2.5-flash-lite",
+      //  model:"gemini-2.5-pro",
 
-      
-      // models/gemini-2.0-flash
-      // models/gemini-2.0-flash-001
+      // model:"gemini-2.0-flash",
+      // model: "gemini-2.0-flash-001",
       // models/gemini-2.0-flash-exp-image-generation
       // models/gemini-2.0-flash-lite-001
       // models/gemini-2.5-flash-preview-tts
@@ -65,13 +63,13 @@ export const runApi = async (promptText) => {
       // models/gemini-2.5-flash-native-audio-latest
       // models/gemini-2.5-flash-native-audio-preview-09-2025
       // models/gemini-2.5-flash-native-audio-preview-12-2025
-      contents: [{ role: "user", parts: [{ text: promptText }] }]
+      contents: [{ role: "user", parts: [{ text: promptText }] }],
     });
 
     return response.text;
   } catch (error) {
     // Detailed error logging for debugging
-    console.error("Gemini Error Status:", error.status);
+    console.error("Gemini Error Status:", error);
     console.error("Gemini Error Message:", error.message);
     return null;
   }
@@ -100,7 +98,6 @@ JSON format:
 ]
 `;
 
-
 //! Get the feedback prompt builder
 export const buildFeedbackPrompt = (obj) => `
 A user attempted a quiz.
@@ -112,12 +109,16 @@ Score: ${obj.score}
 Percentage: ${obj.percentage}%
 
 Questions and Answers:
-${obj.questions.map((q, i) => `
+${obj.questions
+  .map(
+    (q, i) => `
 Question ${i + 1}: ${q}
 Options: ${obj.options.availableOptions[i].join(", ")}
 Correct Answer: ${obj.options.correctOptions[i]}
 User Answer: ${obj.options.userOptions[i] || "Not Answered"}
-`).join("\n")}
+`,
+  )
+  .join("\n")}
 
 Instructions:
 - Analyze the user's performance.
@@ -135,7 +136,6 @@ JSON format:
   "suggestions": ["string"]
 }
 `;
-
 
 //! Test feedback generation
 // const quiz = {
@@ -170,7 +170,6 @@ JSON format:
 //   ]
 // };
 
-
 // const prompt = buildFeedbackPrompt(
 //   quiz.topic,
 //   quiz.difficultyLevel,
@@ -184,8 +183,7 @@ JSON format:
 // const feedback = await runApi(prompt);
 // console.log(feedback);
 
-
-//!frontend 
+//!frontend
 // record {
 //   options: {
 //     userOptions: [ 'Structured Query Language', 'GET', 'WHERE' ],
@@ -212,4 +210,3 @@ JSON format:
 // const prompt = buildPrompt("DBMS", "MEDIUM", 10);
 // const aiResponse = await runApi(prompt);
 // console.log(aiResponse);
-

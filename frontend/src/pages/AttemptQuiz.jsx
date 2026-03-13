@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { ClipLoader } from "react-spinners";
+import { toast } from "react-toastify";
 import Feedback from "../components/Feedback";
 function AttemptQuiz() {
   const location = useLocation();
+  const navigate = useNavigate();
   const data = location.state;
   const { user } = useAuthStore();
   // console.log("data in attempt",data)
@@ -14,35 +16,32 @@ function AttemptQuiz() {
   const [userAnswers, setUserAnswers] = useState([]);
   const [docId, setDocId] = useState(null);
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
-  // console.log("current  user :........",user);
+  // console.log("current  user :........", user);
   async function getQuestions() {
-      try {
-          let res = await axios.post(
-          `http://localhost:8080/questions-api/generate/${user.id}`,
-          data,
-          { withCredentials: true }
-          );
-        // console.log("res  ...", res.data.payload);
-        setDocId(res.data.payload._id);
-        setResdata(res.data.payload);
-        // initialize user answers
-        setUserAnswers(
-          Array(res.data.payload.questions.length).fill("")
-        );
+    try {
+      let res = await axios.post(
+        `http://localhost:8080/questions-api/generate/${user.id}`,
+        data,
+        { withCredentials: true },
+      );
+      // console.log("res  ...", res.data.payload);
+      setDocId(res.data.payload._id);
+      setResdata(res.data.payload);
+      // initialize user answers
+      setUserAnswers(Array(res.data.payload.questions.length).fill(""));
     } catch (err) {
       console.log(err.message, "err in Quiz generated form [FRONTEND]...");
+      toast.error("Error in generating quiz. Please try again.");
+      navigate("/quiz");
     }
   }
-
   useEffect(() => {
     getQuestions();
   }, []);
-
   function handleChange(index, value) {
     let updated = [...userAnswers];
     updated[index] = value;
     setUserAnswers(updated);
-    
   }
   function displayError() {
     const unanswered = [];
@@ -52,13 +51,14 @@ function AttemptQuiz() {
       }
     });
     if (unanswered.length > 0) {
-      alert(`Please answer Question ${unanswered.join(", ")}`);
+      // alert(`Please answer Question ${unanswered.join(", ")}`);
+      toast.error(`Please answer Question ${unanswered.join(", ")}`);
       return true;
     }
     return false;
   }
   async function submitQuiz() {
-    if(displayError()) return;
+    if (displayError()) return;
     let score = 0;
     userAnswers.forEach((ans, index) => {
       if (ans === resdata.options.correctOptions[index]) {
@@ -71,57 +71,56 @@ function AttemptQuiz() {
       // console.log(resdata);
       let res = await axios.put(
         `http://localhost:8080/questions-api/score-answers`,
-        { score:score , userOptions: userAnswers , docId:docId},
-        { withCredentials: true }
+        { score: score, userOptions: userAnswers, docId: docId },
+        { withCredentials: true },
       );
+      setIsFeedbackVisible(true);
       // console.log("Score updated successfully", res.data);
-    } 
-    catch (error) {
-      console.log('error in Score updation .... [frontend]',error.message);
+    } catch (error) {
+      console.log("error in Score updation .... [frontend]", error.message);
     }
 
     //! feedback update in database
-    try{
-      let res=await axios.put('http://localhost:8080/questions-api/feedback',{id:docId},{withCredentials:true});
-      console.log('Feedback updated successfully', res.data);  
-      setIsFeedbackVisible(true);
-    }
-    catch(err){
-      console.log('err in feedback updation .... [frontend]',err.message);
-    }
+    // try{
+    //   let res=await axios.put('http://localhost:8080/questions-api/feedback',{id:docId},{withCredentials:true});
+    //   console.log('Feedback updated successfully', res.data);
+    //   setIsFeedbackVisible(true);
+    // }
+    // catch(err){
+    //   console.log('err in feedback updation .... [frontend]',err.message);
+    // }
   }
-  
+
   if (!resdata) {
-      return 
-      <div>
-        <h3 className="text-center mt-5">Generating Questions...</h3>;
-          <div style={{ textAlign: "center", marginTop: "40px" }}>
-            <ClipLoader size={50} />
-          </div>
-      </div>
+    return <h3 className="text-center mt-5">Generating Questions...</h3>;
   }
 
-  return ( 
-
+  return (
     <div className="w-50 mx-auto mt-5">
-
       <h2 className="text-center mb-4">Attempt Quiz</h2>
-      <div className='d-flex justify-content-evenly'>
-        <p><b>Topic:</b> {data.topic}</p>
-        <p><b>Difficulty:</b> {data.difficultyLevel}</p>
-        <p><b>No of Questions:</b> {data.numberOfQuestions}</p>
+      <div className="d-flex justify-content-evenly">
+        <p>
+          <b>Topic:</b> {data.topic}
+        </p>
+        <p>
+          <b>Difficulty:</b> {data.difficultyLevel}
+        </p>
+        <p>
+          <b>No of Questions:</b> {data.numberOfQuestions}
+        </p>
       </div>
 
-    {
-      resdata.questions.map((q, index) => (
+      {resdata.questions.map((q, index) => (
         <div key={index} className="border p-3 mt-3 rounded">
-          <h5>Q{index + 1}: {q}</h5>
+          <h5>
+            Q{index + 1}: {q}
+          </h5>
           <select
             className="form-control mt-2"
             value={userAnswers[index]}
             onChange={(e) => handleChange(index, e.target.value)}
           >
-          <option value="">Select Answer</option>
+            <option value="">Select Answer</option>
             {resdata.options.availableOptions[index].map((opt, i) => (
               <option key={i} value={opt}>
                 {opt}
@@ -129,19 +128,15 @@ function AttemptQuiz() {
             ))}
           </select>
         </div>
-      ))
-    }
-    <div className="text-center mt-4">
-      <button className="btn btn-success" onClick={submitQuiz}>
-        Submit Quiz
-      </button>
-    </div>
+      ))}
+      <div className="text-center mt-4">
+        <button className="btn btn-success" onClick={submitQuiz}>
+          Submit Quiz
+        </button>
+      </div>
       {isFeedbackVisible && <Feedback docId={docId} />}
     </div>
-
   );
 }
-
-
 
 export default AttemptQuiz;

@@ -24,9 +24,15 @@ userRoutes.post("/register", async (req, res) => {
     userDetails.password = hassedPassword;
     let newUser = new userModel(userDetails);
     await newUser.save();
+    // console.log('registration...',newUser);
+    const responseUser = {
+      id: newUser._id,
+      ...newUser.toObject(),
+    };
+    // console.log('after modification ...',responseUser);
     return res.status(201).json({
       message: "User registered successfully",
-      payload: newUser,
+      payload: responseUser,
     });
   } catch (err) {
     return res.status(500).json({
@@ -54,18 +60,26 @@ userRoutes.post("/login", async (req, res) => {
         payload: userDetails,
       });
     }
-
-    let token = sign({ payload: {...userDetails,id:isExist._id} }, "abcde", { expiresIn: "1d" });
+    let newUserDetails = {
+      email: isExist.email,
+      id: isExist._id,
+    };
+    // console.log('....',newUserDetails)
+    let token = sign({ payload: newUserDetails }, "abcde", { expiresIn: "1d" });
 
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "lax",
       secure: false,
     });
-
+    // console.log("newuser login...... ",newUserDetails);
     return res.status(200).json({
       message: "user logged in successfully",
-      payload: { user: {...userDetails,id:isExist._id}, token: token},
+      payload: {
+        id: isExist._id,
+        email: isExist.email,
+        token: token,
+      },
     });
   } catch (err) {
     return res.status(500).json({
@@ -96,15 +110,32 @@ userRoutes.post("/logout", verifyToken, (req, res) => {
 userRoutes.get("/me", verifyToken, (req, res) => {
   try {
     let user = req.user;
-    // console.log(user)
-
+    // console.log("me.......",user)
     return res.status(200).json({
       message: "user profile fetched successfully",
-      payload: user,
+      payload: user.payload,
     });
   } catch (err) {
     return res.status(500).json({
       message: `err in user-api-profile route [BACKEND]...${err.message}`,
     });
+  }
+});
+
+//* Get userName
+userRoutes.post("/getUserName", async (req, res) => {
+  try {
+    const {email} = req.body;
+    // console.log(email);
+    const record = await userModel.findOne({email});
+    // console.log(record);  
+    if (!record) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res
+      .status(200)
+      .json({ message: "User name fetched successfully", payload: record.userName });
+  } catch (err) {
+    console.log("err in getting user name--user-api Backend...", err.message);
   }
 });

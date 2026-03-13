@@ -50,7 +50,7 @@ const questionSchema = new mongoose.Schema({
         type:String,
         
     }
-})
+},{timestamps:true})
 
 //! Generate a collection for that SCHEMA
 export const questionsModel =  mongoose.model('question',questionSchema);

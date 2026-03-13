@@ -1,37 +1,55 @@
-import React from 'react'
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {useAuthStore} from '../store/authStore';
+import { useAuthStore } from "../store/authStore";
+import { Link } from "react-router-dom";
 function Register() {
-  const navigate=useNavigate();
-  let {register,handleSubmit,formState:{errors}}=useForm();
-  const {setUser} = useAuthStore();
-
+  const navigate = useNavigate();
+  let {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { setUser } = useAuthStore();
   async function submitForm(data) {
     try {
-      let res=await axios.post('http://localhost:8080/user-api/register',data);
-      if(res.status == 201) {
-          toast.success(res.data.message);
-          setUser(res.data.payload);
-          navigate('/');
-      } 
-    }
-    catch (err) {  
-      if(err.response){
-        console.log("sgfghh")
+      let res = await axios.post(
+        "http://localhost:8080/user-api/register",
+        data,
+      );
+      if (res.status == 201) {
+        toast.success(res.data.message);
+        setUser(res.data.payload);
+        // console.log('register......',res.data.payload);
+        navigate("/login");
+      }
+    } catch (err) {
+      if (err.response) {
+        // console.log("sgfghh")
         toast.error(err.response.data.message);
       }
-      console.log(err.message,'err in register submit form [FRONTEND]...');
+      console.log(err.message, "err in register submit form [FRONTEND]...");
     }
   }
   return (
-     <div>
+    <div
+      className="container d-flex justify-content-center align-items-center"
+      style={{ minHeight: "80vh" }}
+    >
       <form
         onSubmit={handleSubmit(submitForm)}
-        className="w-50 mx-auto mt-5 p-3 border border-2 border-dark rounded"
+        className="p-4 rounded shadow"
+        style={{
+          backgroundColor: "var(--primary)",
+          color: "white",
+          width: "35%",
+           height: "fit-content"
+        }}
       >
+        <h3 className="text-center mb-4">Register</h3>
+
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email
@@ -42,9 +60,12 @@ function Register() {
             id="email"
             className="form-control"
           />
-          {errors.email && <p className="text-danger">Email is required</p>}
+          {errors.email && (
+            <p className="text-danger mt-1">Email is required</p>
+          )}
         </div>
-         <div className="mb-3">
+
+        <div className="mb-3">
           <label htmlFor="username" className="form-label">
             Username
           </label>
@@ -54,8 +75,11 @@ function Register() {
             id="username"
             className="form-control"
           />
-          {errors.userName && <p className="text-danger">Username is required</p>}
+          {errors.userName && (
+            <p className="text-danger mt-1">Username is required</p>
+          )}
         </div>
+
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Password
@@ -67,17 +91,25 @@ function Register() {
             className="form-control"
           />
           {errors.password && (
-            <p className="text-danger">Password is required</p>
+            <p className="text-danger mt-1">Password is required</p>
           )}
         </div>
-        <div className="text-center">
-          <button className="bg-success" type="submit">
+
+        <div className=" text-center mt-4">
+          <button className="btn btn-success w-25 quiz-btn" type="submit">
             Register
           </button>
         </div>
+
+        <div className="text-center mt-3">
+          <p className="mb-1">Already have an account?</p>
+          <Link to="/login" className="text-decoration-none text-info">
+            Login here
+          </Link>
+        </div>
       </form>
     </div>
-  )
+  );
 }
 
-export default Register
+export default Register;

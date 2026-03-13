@@ -11,6 +11,7 @@ import Contact from '../pages/Contact.jsx';
 import About from '../pages/About.jsx';
 import Profile from '../pages/Profile.jsx';
 import AttemptQuiz from '../pages/AttemptQuiz.jsx';
+import EntireQuizDetails from './EntireQuizDetails.jsx';
 function Routing() {
   const browserRouterObj=createBrowserRouter([{
    path:'/',
@@ -55,6 +56,10 @@ function Routing() {
     {
         path:'attempt-quiz',
         element:<AttemptQuiz></AttemptQuiz>
+    },
+    {
+        path:'entire-quiz-details',
+        element:<EntireQuizDetails></EntireQuizDetails>
     }
    ]
   }])

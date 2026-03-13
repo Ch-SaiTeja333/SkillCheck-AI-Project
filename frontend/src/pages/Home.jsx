@@ -1,91 +1,125 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {useAuthStore} from "../store/authStore.js";
+import { useAuthStore } from "../store/authStore.js";
 function Home() {
-  const {user} = useAuthStore();
+  const { user } = useAuthStore();
   return (
     <div className="container py-5">
       {/* Hero Section */}
       <div className="text-center mb-5">
-        <h1 className="fw-bold mb-3">AI Quiz Generator</h1>
-        <p className="text-muted fs-5">
+        <h1 className="fw-bold mb-3" style={{ color: "danger" }}>
+          AI Quiz Generator
+        </h1>
+        <p className="fs-5" style={{ color: "#3d2a2a" }}>
           Practice smarter with AI-generated quizzes and personalized feedback
         </p>
-       
       </div>
 
       {/* Features Section */}
-      <div className="row text-center">
+      <div className="row mt-5">
         <div className="col-md-4 mb-4">
-          <div className="card h-100 shadow-sm">
-            <div className="card-body">
+          <div
+            className="card h-100 rounded-4 home-cards"
+            style={{ backgroundColor: "var(--primary)", color: "white" }}
+          >
+            <div className="card-body text-start">
               <h5 className="card-title fw-semibold">AI-Generated Questions</h5>
-              <p className="card-text text-muted">
-                Get dynamic quiz questions based on your selected topic and difficulty level.
+              <p style={{ color: "#d6d6d6" }}>
+                Generate smart quiz questions instantly using AI based on the
+                topic you choose.
               </p>
+              <ul className="small mt-3 ps-3" style={{ color: "#d6d6d6" }}>
+                <li>Questions generated in real-time</li>
+                <li>Covers multiple technical topics</li>
+                <li>Improves conceptual understanding</li>
+                <li>Randomized questions every attempt</li>
+                <li>Helps simulate real interview scenarios</li>
+              </ul>
             </div>
           </div>
         </div>
 
         <div className="col-md-4 mb-4">
-          <div className="card h-100 shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title fw-semibold">Personalized Difficulty</h5>
-              <p className="card-text text-muted">
-                Choose Easy, Medium, or Hard to match your learning level.
+          <div
+            className="card h-100 rounded-4 home-cards"
+            style={{ backgroundColor: "var(--accent)", color: "white" }}
+          >
+            <div className="card-body text-start">
+              <h5 className="card-title fw-semibold">
+                Personalized Difficulty
+              </h5>
+              <p style={{ color: "#d6d6d6" }}>
+                Adapt the quiz difficulty to match your current knowledge level.
               </p>
+              <ul className="small mt-3 ps-3" style={{ color: "#d6d6d6" }}>
+                <li>Beginner to advanced levels</li>
+                <li>Easy, Medium, and Hard modes</li>
+                <li>Adjust difficulty anytime</li>
+                <li>Practice according to your skill level</li>
+                <li>Great for step-by-step learning</li>
+              </ul>
             </div>
           </div>
         </div>
 
         <div className="col-md-4 mb-4">
-          <div className="card h-100 shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title fw-semibold">Instant Results & Feedback</h5>
-              <p className="card-text text-muted">
-                View your score, percentage, correct answers, and areas of improvement.
+          <div
+            className="card h-100 rounded-4 home-cards"
+            style={{ backgroundColor: "var(--secondary)", color: "white" }}
+          >
+            <div className="card-body text-start">
+              <h5 className="card-title fw-semibold">
+                Instant Results & Feedback
+              </h5>
+              <p style={{ color: "#d6d6d6" }}>
+                Get immediate insights into your performance after completing a
+                quiz.
               </p>
+              <ul className="small mt-3 ps-3" style={{ color: "#d6d6d6" }}>
+                <li>Detailed performance analysis</li>
+                <li>View score and percentage</li>
+                <li>Track learning progress</li>
+                <li>Identify weak topics quickly</li>
+                <li>Improve with every quiz attempt</li>
+              </ul>
             </div>
           </div>
         </div>
       </div>
 
       {/* CTA Section */}
-      {
-        user ? (
-          <div className="text-center mt-5">
-            <h2 className="fw-bold mb-3">Ready to Test Your Knowledge?</h2>
-            <p className="text-muted fs-5 mb-4">
-              Click the button below to start your quiz and track your progress!
-            </p> 
-            <Link to="/quiz">
-              <button className="btn btn-success btn-lg">
-                Take a Quiz Now
-              </button>
+      {user ? (
+        <div className="text-center mt-5">
+          <h2 className="fw-bold mb-3">Ready to Test Your Knowledge?</h2>
+          <p className="fs-5 mb-4" >
+            Click the button below to start your quiz and track your progress!
+          </p>
 
+          <Link to="/quiz">
+            <button className="btn  btn-lg btn-outline-success">
+              Take a Quiz Now
+            </button>
+          </Link>
+        </div>
+      ) : (
+        <div className="text-center mt-5">
+          <p>
+            Create an account to track your progress and view past quiz history.
+          </p>
+
+          <div className="d-flex justify-content-center gap-3">
+            <Link to="/login" className="btn btn-outline-primary quiz-btn">
+              Login
+            </Link>
+
+            <Link to="/register" className="btn btn-outline-success quiz-btn">
+              Register
             </Link>
           </div>
-        ) : ( 
-          <div className="text-center mt-5">
-            <p className="text-muted">
-              Create an account to track your progress and view past quiz history.
-            </p>
-            <div className="d-flex justify-content-center gap-3">
-              <Link to="/login" className="btn btn-outline-primary">
-                Login
-              </Link>
-              <Link to="/register" className="btn btn-outline-success">
-                Register
-              </Link>
-            </div>
-          </div>
-        )
-    }
-
+        </div>
+      )}
     </div>
   );
 }
 
 export default Home;
-
-

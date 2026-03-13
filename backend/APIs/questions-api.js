@@ -12,11 +12,12 @@ questionsRoutes.post("/generate/:id", async (req, res) => {
     let { topic, difficultyLevel, numberOfQuestions } = req.body;
     let prompt = buildPrompt(topic, difficultyLevel, numberOfQuestions);
     let aiResponse = await runApi(prompt);
+    console.log(aiResponse);
     // remove ```json and ```
     const cleanResponse = aiResponse
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .trim();
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
     const parsed = JSON.parse(cleanResponse);
     // Save to database
     // console.log('Parsed AI Response:', parsed);
@@ -82,7 +83,6 @@ questionsRoutes.put("/score-answers", async (req, res) => {
   }
 });
 
-
 questionsRoutes.put("/feedback", async (req, res) => {
   try {
     const { id } = req.body;
@@ -91,18 +91,24 @@ questionsRoutes.put("/feedback", async (req, res) => {
       return res.status(404).json({ message: "Questions not found" });
     }
     // console.log('record',record);
-    const prompt=buildFeedbackPrompt(record);
+    const prompt = buildFeedbackPrompt(record);
     // console.log('prompt',prompt);
-    const feedback=await runApi(prompt);
+    const feedback = await runApi(prompt);
     // console.log('feedback',feedback);
     const clean = feedback
       .replace(/```json/g, "")
       .replace(/```/g, "")
       .trim();
-      // console.log(clean);
+    // console.log(clean);
     record.feedback = clean;
     await record.save();
-    res.status(200).json({ message: "Feedback saved successfully" });
+    const resultantFeedback = JSON.parse(clean);
+    res
+      .status(200)
+      .json({
+        message: "Feedback saved successfully",
+        payload: resultantFeedback,
+      });
   } catch (err) {
     console.log(
       "err in saving feedback--questions-api Backend...",
@@ -118,15 +124,43 @@ questionsRoutes.get("/get-feedback/:id", async (req, res) => {
     const record = await questionsModel.findById(id);
     if (!record) {
       return res.status(404).json({ message: "Questions not found" });
-    }           
-    res.status(200).json({message:'Feedback fetched successfully', payload: record.feedback});
+    }
+    const feedback = JSON.parse(record.feedback);
+    res
+      .status(200)
+      .json({ message: "Feedback fetched successfully", payload: feedback });
   } catch (err) {
-    console.log("err in getting feedback--questions-api Backend...",err.message);
+    console.log(
+      "err in getting feedback--questions-api Backend...",
+      err.message,
+    );
     res.status(500).json({ message: err.message });
   }
-
 });
-    
+
+questionsRoutes.get("/profile/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    // console.log('id...',id);
+    const records = await questionsModel
+      .find({ userId: id ,  $expr: { $ne: ["$createdAt", "$updatedAt"] } }, { topic: 1, score: 1, percentage: 1, createdAt: 1,numberQuestions:1 })
+      .sort({ createdAt: -1 });
+    // console.log(records)
+    res
+      .status(200)
+      .json({
+        message: "Profile details fetched successfully",
+        payload: records,
+      });
+  } catch (err) {
+    console.log(
+      "err in fetching profile details--questions-api Backend...",
+      err.message,
+    );
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // feedback ```json
 // {
 //   "overallFeedback": "Excellent performance on this easy DBMS quiz! You've demonstrated a solid understanding of fundamental concepts.",
@@ -141,4 +175,3 @@ questionsRoutes.get("/get-feedback/:id", async (req, res) => {
 //   ]
 // }
 // ```
-    

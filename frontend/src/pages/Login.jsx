@@ -13,32 +13,44 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-async function submitForm(data) {
-  try {
-    let res = await axios.post(
-      "http://localhost:8080/user-api/login",
-      data,
-      { withCredentials: true }
-    );
+  async function submitForm(data) {
+    try {
+      let res = await axios.post("http://localhost:8080/user-api/login", data, {
+        withCredentials: true,
+      });
 
-    if (res.status === 200) {
-      toast.success(res.data.message);
-      setUser(res.data.payload.user);
-      navigate("/");
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        console.log('login......',res.data.payload);
+        setUser(res.data.payload);
+        navigate("/");
+      }
+    } catch (err) {
+      if (err.response) {
+        toast.error(err.response.data.message);
+      }
+      console.log(err, "err in login submit form [FRONTEND]...");
     }
-  } catch (err) {
-    if (err.response) {
-      toast.error(err.response.data.message);
-    }
-    console.log(err, "err in login submit form [FRONTEND]...");
   }
-}
   return (
-    <div>
+    <div
+      className="container d-flex justify-content-center align-items-center"
+      style={{ minHeight: "80vh" ,
+      }}
+    >
       <form
         onSubmit={handleSubmit(submitForm)}
-        className="w-50 mx-auto mt-5 p-3 border border-2 border-dark rounded"
+        className=" p-4 rounded shadow"
+        style={{
+          backgroundColor: "var(--secondary)",
+          color: "white",
+          width: "35%",
+           height: "fit-content",
+           boxShadow: "0 20px 40px rgba(0,0,0,0.4)"
+        }}
       >
+        <h3 className="text-center mb-4">Login</h3>
+
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
             Email
@@ -49,8 +61,11 @@ async function submitForm(data) {
             id="email"
             className="form-control"
           />
-          {errors.email && <p className="text-danger">Email is required</p>}
+          {errors.email && (
+            <p className="text-danger mt-1">Email is required</p>
+          )}
         </div>
+
         <div className="mb-3">
           <label htmlFor="password" className="form-label">
             Password
@@ -62,20 +77,23 @@ async function submitForm(data) {
             className="form-control"
           />
           {errors.password && (
-            <p className="text-danger">Password is required</p>
+            <p className="text-danger mt-1">Password is required</p>
           )}
         </div>
-        <div className="text-center">
-          <button className="bg-success" type="submit">
+
+        <div className="text-center mt-4">
+          <button className="btn btn-success w-25 quiz-btn" type="submit">
             Login
           </button>
         </div>
-        <div className="d-flex justify-content-center align-items-center">
-          <p className="text-center mt-3">Don't have an account ? </p>
-          <Link to="/register" className="text-center d-block">
+
+        <div className="text-center mt-3">
+          <p className="mb-1">Don't have an account?</p>
+          <Link to="/register" className="text-decoration-none text-info">
             Register here
           </Link>
         </div>
+
       </form>
     </div>
   );

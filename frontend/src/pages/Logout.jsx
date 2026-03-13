@@ -6,7 +6,7 @@ import axios from "axios";
 function Logout() {
   const { clearAuth } = useAuthStore();
   const navigate = useNavigate();
-  async function backendCall(data) {
+  async function backendCall() {
     try {
       let res = await axios.post(
         "http://localhost:8080/user-api/logout",
