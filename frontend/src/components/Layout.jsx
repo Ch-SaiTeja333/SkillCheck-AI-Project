@@ -1,13 +1,16 @@
-import React from 'react'
-import {Outlet} from 'react-router';
-import Navbar from './Navbar.jsx';
+import React from "react";
+import { Outlet } from "react-router";
+import { Suspense, Lazy } from "react";
+const Navbar = Lazy(() => import("./Navbar.jsx"));
 function Layout() {
   return (
     <div>
-      <Navbar></Navbar>
+      <Suspense fallback={<div>Navbar Loading..........</div>}>
+        <Navbar></Navbar>
+      </Suspense>
       <Outlet></Outlet>
     </div>
-  )
+  );
 }
 
-export default Layout
+export default Layout;

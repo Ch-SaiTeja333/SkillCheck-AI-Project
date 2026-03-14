@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import {useAuthStore} from "../store/authStore.js";
+import { useAuthStore } from "../store/authStore.js";
 const beforeLoginLeft = [
   { label: "Home", to: "/" },
   { label: "Quiz", to: "/quiz" },
@@ -39,7 +39,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-light shadow-sm ">
       <div className="container-fluid ">
         <Link className="navbar-brand fw-bold" to="/">
-          SkillCheck AI 
+          SkillCheck AI
         </Link>
         <button
           className="navbar-toggler"
@@ -96,39 +96,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-{
-  /*  <li className="nav-item">
-              <Link className="nav-link" to="/">Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/quiz">Quiz</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/history">History</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/register">Register</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/login">Login</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/logout">Logout</Link>
-            </li>
-          </ul> */
-}
-
-//   <Link to="/profile" className="text-decoration-none">
-//     <div
-//       className="d-flex align-items-center justify-content-center rounded-circle bg-primary text-white shadow"
-//       style={{
-//         width: "40px",
-//         height: "40px",
-//         transition: "0.3s",
-//         cursor: "pointer"
-//       }}
-//     >
-//       <FaUserCircle size={20} />
-//     </div>
-//   </Link>

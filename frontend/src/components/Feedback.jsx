@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+
 function Feedback({ docId }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,11 +20,13 @@ function Feedback({ docId }) {
       if (res.data.payload) {
         setData(res.data.payload);
       }
+
       setLoading(false);
     } catch (err) {
       console.log("err in feedback updation .... [frontend]", err.message);
     }
   }
+
   useEffect(() => {
     if (data) return;
     const interval = setInterval(fetchFeedback, 2000);
@@ -35,9 +38,7 @@ function Feedback({ docId }) {
       <div className="text-center mb-3">
         <button
           className="btn btn-primary quiz-btn"
-          onClick={() => {
-            setIsFeedbackBtn(false);
-          }}
+          onClick={() => setIsFeedbackBtn(false)}
         >
           Get Feedback
         </button>
@@ -46,7 +47,7 @@ function Feedback({ docId }) {
 
   if (loading) {
     return (
-      <div className="d-flex align-items-center justify-content-center mt-5 ">
+      <div className="d-flex align-items-center justify-content-center mt-5">
         loading...
       </div>
     );
@@ -68,13 +69,13 @@ function Feedback({ docId }) {
         className="card shadow-sm p-3 mb-4 rounded-4"
         style={{ backgroundColor: "#F7F5FF" }}
       >
-        <div className="d-flex justify-content-around text-center">
-          <div>
+        <div className="row text-center">
+          <div className="col-md-6 col-12 mb-3 mb-md-0">
             <h4 className="mb-0">Score</h4>
             <h2 className="fw-bold text-primary">{data?.score}</h2>
           </div>
 
-          <div>
+          <div className="col-md-6 col-12">
             <h4 className="mb-0">Percentage</h4>
             <h2 className="fw-bold text-success">{data?.percentage}%</h2>
           </div>
@@ -140,12 +141,9 @@ function Feedback({ docId }) {
         </div>
       </div>
 
-      {/* Back TO Top */}
+      {/* Back to Top */}
       <div className="text-center">
-        <button
-          className="btn btn-success d-block mx-auto mb-5"
-          onClick={backToTop}
-        >
+        <button className="btn btn-success mb-5" onClick={backToTop}>
           Back to Top
         </button>
       </div>

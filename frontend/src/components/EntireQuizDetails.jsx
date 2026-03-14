@@ -2,6 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 function EntireQuizDetails() {
   const location = useLocation();
   const { historyId, userId } = location.state;
@@ -23,18 +24,22 @@ function EntireQuizDetails() {
       );
     }
   }
+
   useEffect(() => {
     getEntireQuizDetails();
   }, []);
+
   if (!quizDetails) return <h3 className="text-center mt-5">Loading...</h3>;
 
   const feedback = JSON.parse(quizDetails.feedback);
+
   function backToTop() {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   }
+
   return (
     <div className="container mt-4">
       <h2 className="mb-4 text-center fw-bold">
@@ -46,24 +51,24 @@ function EntireQuizDetails() {
         className="card shadow-sm p-3 mb-4 rounded-4"
         style={{ backgroundColor: "#F7F5FF" }}
       >
-        <div className="row text-center align-items-center">
-          <div className="col">
+        <div className="row text-center">
+          <div className="col-lg col-md-4 col-12 mb-2">
             <strong>Difficulty:</strong> {quizDetails.difficultyLevel}
           </div>
 
-          <div className="col">
+          <div className="col-lg col-md-4 col-12 mb-2">
             <strong>Questions:</strong> {quizDetails.numberQuestions}
           </div>
 
-          <div className="col">
+          <div className="col-lg col-md-4 col-12 mb-2">
             <strong>Score:</strong> {quizDetails.score}
           </div>
 
-          <div className="col">
+          <div className="col-lg col-md-4 col-12 mb-2">
             <strong>Percentage:</strong> {quizDetails.percentage}%
           </div>
 
-          <div className="col">
+          <div className="col-lg col-md-4 col-12">
             <strong>Date:</strong> {quizDetails.createdAt.split("T")[0]}
           </div>
         </div>
@@ -73,7 +78,7 @@ function EntireQuizDetails() {
       {quizDetails.questions.map((q, index) => (
         <div
           key={index}
-          className="card shadow-sm p-4 mb-3 rounded-4"
+          className="card shadow-sm p-md-4 p-3 mb-3 rounded-4"
           style={{ backgroundColor: "#F8F9FA" }}
         >
           <h6 className="fw-semibold mb-3">
@@ -100,7 +105,7 @@ function EntireQuizDetails() {
       <h4 className="mt-5 mb-3 text-center fw-bold">Feedback</h4>
 
       <div
-        className="card shadow-sm p-4 rounded-4 mb-5"
+        className="card shadow-sm p-md-4 p-3 rounded-4 mb-5"
         style={{ backgroundColor: "#F0F6FF" }}
       >
         <p>
@@ -135,12 +140,9 @@ function EntireQuizDetails() {
         </ul>
       </div>
 
-      {/*  Back to Top */}
+      {/* Back to Top */}
       <div className="text-center">
-        <button
-          className="btn btn-success d-block mx-auto mb-5"
-          onClick={backToTop}
-        >
+        <button className="btn btn-success mb-5" onClick={backToTop}>
           Back to Top
         </button>
       </div>

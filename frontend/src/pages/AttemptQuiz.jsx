@@ -107,18 +107,18 @@ function AttemptQuiz() {
         className="card shadow-sm p-3 mb-4 rounded-4"
         style={{ backgroundColor: "#F7F5FF" }}
       >
-        <div className="d-flex justify-content-around text-center">
-          <p>
+        <div className="row text-center">
+          <div className="col-md-4 col-12 mb-2">
             <strong>Topic:</strong> {data.topic}
-          </p>
+          </div>
 
-          <p>
+          <div className="col-md-4 col-12 mb-2">
             <strong>Difficulty:</strong> {data.difficultyLevel}
-          </p>
+          </div>
 
-          <p>
+          <div className="col-md-4 col-12">
             <strong>No of Questions:</strong> {data.numberOfQuestions}
-          </p>
+          </div>
         </div>
       </div>
 
@@ -126,7 +126,7 @@ function AttemptQuiz() {
       {resdata.questions.map((q, index) => (
         <div
           key={index}
-          className="card shadow-sm p-4 mb-3 rounded-4"
+          className="card shadow-sm p-md-4 p-3 mb-3 rounded-4"
           style={{ backgroundColor: "#F8F9FA" }}
         >
           <h5 className="mb-3 fw-semibold">

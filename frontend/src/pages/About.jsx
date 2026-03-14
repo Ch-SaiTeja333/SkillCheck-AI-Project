@@ -5,23 +5,23 @@ function About() {
     <div className="container py-5">
       {/* Header */}
       <div className="text-center mb-5">
-        <h1 className="fw-bold" style={{ color: "accent" }}>
-          About AI Quiz Generator
-        </h1>
-        <p style={{ color: "danger" }}>
+        <h1 className="fw-bold">About AI Quiz Generator</h1>
+
+        <p className="text-muted">
           Learn, practice, and evaluate your knowledge with AI-powered quizzes.
         </p>
       </div>
 
       {/* Top Cards */}
       <div className="row g-4">
-        <div className="col-md-6">
+        <div className="col-lg-6 col-md-6 col-12">
           <div
             className="card h-100 home-cards"
             style={{ backgroundColor: "var(--accent)", color: "white" }}
           >
             <div className="card-body">
               <h5 className="fw-semibold">Project Overview</h5>
+
               <p style={{ color: "#d6d6d6" }}>
                 The AI Quiz Generator helps users test and improve their
                 knowledge through dynamically generated quizzes. Users can
@@ -31,13 +31,14 @@ function About() {
           </div>
         </div>
 
-        <div className="col-md-6">
+        <div className="col-lg-6 col-md-6 col-12">
           <div
             className="card h-100 home-cards"
             style={{ backgroundColor: "var(--danger)", color: "white" }}
           >
             <div className="card-body">
               <h5 className="fw-semibold">How It Works</h5>
+
               <p style={{ color: "#d6d6d6" }}>
                 AI generates multiple-choice questions based on the selected
                 topic and difficulty. After completing the quiz, the system
@@ -51,7 +52,7 @@ function About() {
 
       {/* Feature Card */}
       <div className="row mt-4 justify-content-center">
-        <div className="col-md-5">
+        <div className="col-lg-5 col-md-8 col-12">
           <div
             className="card home-cards"
             style={{ backgroundColor: "var(--highlight)", color: "white" }}

@@ -1,16 +1,17 @@
 import React from "react";
 import { useAuthStore } from "../store/authStore.js";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 function Profile() {
   const user = useAuthStore((state) => state.user);
+
   const [profileDetails, setProfileDetails] = useState([]);
   const [userName, setUserName] = useState("");
+
   useEffect(() => {
+    // console.log("User inside Profile:", user);
     if (user) {
-      // console.log("User inside Profile:", user);
       getUserName();
       getProfileDetials();
     }
@@ -26,11 +27,13 @@ function Profile() {
         { withCredentials: true },
       );
       // console.log("user name....", res.data.payload);
+
       setUserName(res.data.payload);
     } catch (err) {
       console.log("err in getUserId", err.message);
     }
   }
+
   async function getProfileDetials() {
     // console.log('current user..',user);
     try {
@@ -45,14 +48,13 @@ function Profile() {
     }
   }
 
- 
-
   return (
     <div className="container py-5">
-      <h3 className="fw-bold text-center">User Profile</h3>
+      <h3 className="fw-bold text-center mb-4">User Profile</h3>
+
       {/* PROFILE CARD */}
-      <div className="row justify-content-center mb-5 ">
-        <div className="col-md-3">
+      <div className="row justify-content-center mb-5">
+        <div className="col-lg-3 col-md-5 col-sm-7 col-12">
           <div className="card shadow-lg border-0 rounded-5">
             <div className="card-body text-center">
               <img
@@ -60,10 +62,11 @@ function Profile() {
                 width="80"
                 className="mb-3"
               />
-              
+
               <p className="text-muted mb-1">
                 <b>UserName:</b> {userName}
               </p>
+
               <p className="text-muted mb-1">
                 <b>Email:</b> {user?.email}
               </p>
@@ -101,12 +104,16 @@ function Profile() {
                   profileDetails.map((item, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
+
                       <td className="fw-semibold">{item.topic}</td>
+
                       <td>{item.score}</td>
+
                       <td>{item.numberQuestions}</td>
+
                       <td>
                         <span
-                          className={`badge d-inline-block text-center px-3 py-2 ${
+                          className={`badge px-3 py-2 ${
                             item.percentage < 35
                               ? "bg-danger"
                               : item.percentage <= 75
@@ -118,6 +125,7 @@ function Profile() {
                           {item.percentage}%
                         </span>
                       </td>
+
                       <td>
                         {item.createdAt ? item.createdAt.split("T")[0] : "N/A"}
                       </td>
