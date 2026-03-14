@@ -1,13 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router";
-import { Suspense, Lazy } from "react";
-const Navbar = Lazy(() => import("./Navbar.jsx"));
+import { Suspense, lazy  } from "react";
+import Navbar from "./Navbar.jsx";
 function Layout() {
   return (
-    <div>
-      <Suspense fallback={<div>Navbar Loading..........</div>}>
+    <div> 
         <Navbar></Navbar>
-      </Suspense>
       <Outlet></Outlet>
     </div>
   );
