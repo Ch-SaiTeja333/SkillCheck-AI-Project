@@ -101,14 +101,17 @@ questionsRoutes.put("/feedback", async (req, res) => {
       .trim();
     // console.log(clean);
     record.feedback = clean;
+
+    // console.log("record", record)
     await record.save();
     const resultantFeedback = JSON.parse(clean);
     res
       .status(200)
       .json({
         message: "Feedback saved successfully",
-        payload: resultantFeedback,
+        payload: {...resultantFeedback,score: record.score, percentage: record.percentage},
       });
+
   } catch (err) {
     console.log(
       "err in saving feedback--questions-api Backend...",

@@ -5,6 +5,7 @@ import { useAuthStore } from "../store/authStore";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import Feedback from "../components/Feedback";
+import { Link } from "react-router-dom";
 function AttemptQuiz() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,7 +16,9 @@ function AttemptQuiz() {
   const [resdata, setResdata] = useState(null);
   const [userAnswers, setUserAnswers] = useState([]);
   const [docId, setDocId] = useState(null);
+  const [isSubmit, setIsSubmit] = useState(true);
   const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
+  const [isresluts, setISResults] = useState(false);
   // console.log("current  user :........", user);
   async function getQuestions() {
     try {
@@ -53,11 +56,15 @@ function AttemptQuiz() {
     if (unanswered.length > 0) {
       // alert(`Please answer Question ${unanswered.join(", ")}`);
       toast.error(`Please answer Question ${unanswered.join(", ")}`);
+      setIsSubmit(true);
+      setISResults(false);
       return true;
     }
     return false;
   }
   async function submitQuiz() {
+    setIsSubmit(false);
+    setISResults(true);
     if (displayError()) return;
     let score = 0;
     userAnswers.forEach((ans, index) => {
@@ -65,7 +72,9 @@ function AttemptQuiz() {
         score++;
       }
     });
-    alert(`Your Score: ${score}/${resdata.questions.length}`);
+    // alert(`Your Score: ${score}/${resdata.questions.length}`);
+    toast.success(`Your Score: ${score}/${resdata.questions.length}`);
+
     //! score and correct answers update in database
     try {
       // console.log(resdata);
@@ -79,48 +88,58 @@ function AttemptQuiz() {
     } catch (error) {
       console.log("error in Score updation .... [frontend]", error.message);
     }
-
-    //! feedback update in database
-    // try{
-    //   let res=await axios.put('http://localhost:8080/questions-api/feedback',{id:docId},{withCredentials:true});
-    //   console.log('Feedback updated successfully', res.data);
-    //   setIsFeedbackVisible(true);
-    // }
-    // catch(err){
-    //   console.log('err in feedback updation .... [frontend]',err.message);
-    // }
   }
 
   if (!resdata) {
-    return <h3 className="text-center mt-5">Generating Questions...</h3>;
+    return (
+      <div className="d-flex align-items-center justify-content-center mt-5 ">
+        <div class="spinner-3"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="w-50 mx-auto mt-5">
-      <h2 className="text-center mb-4">Attempt Quiz</h2>
-      <div className="d-flex justify-content-evenly">
-        <p>
-          <b>Topic:</b> {data.topic}
-        </p>
-        <p>
-          <b>Difficulty:</b> {data.difficultyLevel}
-        </p>
-        <p>
-          <b>No of Questions:</b> {data.numberOfQuestions}
-        </p>
+    <div className="container mt-5">
+      <h2 className="text-center mb-4 fw-bold">Attempt Quiz</h2>
+
+      {/* Quiz Info */}
+      <div
+        className="card shadow-sm p-3 mb-4 rounded-4"
+        style={{ backgroundColor: "#F7F5FF" }}
+      >
+        <div className="d-flex justify-content-around text-center">
+          <p>
+            <strong>Topic:</strong> {data.topic}
+          </p>
+
+          <p>
+            <strong>Difficulty:</strong> {data.difficultyLevel}
+          </p>
+
+          <p>
+            <strong>No of Questions:</strong> {data.numberOfQuestions}
+          </p>
+        </div>
       </div>
 
+      {/* Questions */}
       {resdata.questions.map((q, index) => (
-        <div key={index} className="border p-3 mt-3 rounded">
-          <h5>
-            Q{index + 1}: {q}
+        <div
+          key={index}
+          className="card shadow-sm p-4 mb-3 rounded-4"
+          style={{ backgroundColor: "#F8F9FA" }}
+        >
+          <h5 className="mb-3 fw-semibold">
+            Q{index + 1}. {q}
           </h5>
+
           <select
-            className="form-control mt-2"
+            className="form-select"
             value={userAnswers[index]}
             onChange={(e) => handleChange(index, e.target.value)}
           >
             <option value="">Select Answer</option>
+
             {resdata.options.availableOptions[index].map((opt, i) => (
               <option key={i} value={opt}>
                 {opt}
@@ -129,11 +148,20 @@ function AttemptQuiz() {
           </select>
         </div>
       ))}
-      <div className="text-center mt-4">
-        <button className="btn btn-success" onClick={submitQuiz}>
-          Submit Quiz
-        </button>
-      </div>
+
+      {/* Submit Button */}
+      {isSubmit && (
+        <div className="text-center mt-4 mb-5">
+          <button
+            className="btn btn-success px-4 py-2 quiz-btn"
+            onClick={submitQuiz}
+          >
+            Submit Quiz
+          </button>
+        </div>
+      )}
+
+      {/* Feedback Section */}
       {isFeedbackVisible && <Feedback docId={docId} />}
     </div>
   );

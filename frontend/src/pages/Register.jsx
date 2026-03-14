@@ -21,7 +21,7 @@ function Register() {
       );
       if (res.status == 201) {
         toast.success(res.data.message);
-        setUser(res.data.payload);
+        // setUser(res.data.payload);
         // console.log('register......',res.data.payload);
         navigate("/login");
       }
@@ -45,7 +45,7 @@ function Register() {
           backgroundColor: "var(--primary)",
           color: "white",
           width: "35%",
-           height: "fit-content"
+          height: "fit-content",
         }}
       >
         <h3 className="text-center mb-4">Register</h3>
@@ -71,12 +71,18 @@ function Register() {
           </label>
           <input
             type="text"
-            {...register("userName", { required: true })}
+            {...register("userName", {
+              required: "UserName is Required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+            })}
             id="username"
             className="form-control"
           />
           {errors.userName && (
-            <p className="text-danger mt-1">Username is required</p>
+            <p className="text-danger mt-1">{errors.userName.message}</p>
           )}
         </div>
 
@@ -84,14 +90,26 @@ function Register() {
           <label htmlFor="password" className="form-label">
             Password
           </label>
+
           <input
             type="password"
-            {...register("password", { required: true })}
             id="password"
             className="form-control"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+              maxLength: {
+                value: 20,
+                message: "Password must not exceed 20 characters",
+              },
+            })}
           />
+
           {errors.password && (
-            <p className="text-danger mt-1">Password is required</p>
+            <p className="text-danger mt-1">{errors.password.message}</p>
           )}
         </div>
 

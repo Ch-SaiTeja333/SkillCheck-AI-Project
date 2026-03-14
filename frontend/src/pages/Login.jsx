@@ -21,7 +21,7 @@ function Login() {
 
       if (res.status === 200) {
         toast.success(res.data.message);
-        console.log('login......',res.data.payload);
+        console.log("login......", res.data.payload);
         setUser(res.data.payload);
         navigate("/");
       }
@@ -35,8 +35,7 @@ function Login() {
   return (
     <div
       className="container d-flex justify-content-center align-items-center"
-      style={{ minHeight: "80vh" ,
-      }}
+      style={{ minHeight: "80vh" }}
     >
       <form
         onSubmit={handleSubmit(submitForm)}
@@ -45,8 +44,8 @@ function Login() {
           backgroundColor: "var(--secondary)",
           color: "white",
           width: "35%",
-           height: "fit-content",
-           boxShadow: "0 20px 40px rgba(0,0,0,0.4)"
+          height: "fit-content",
+          boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
         }}
       >
         <h3 className="text-center mb-4">Login</h3>
@@ -70,14 +69,26 @@ function Login() {
           <label htmlFor="password" className="form-label">
             Password
           </label>
+
           <input
             type="password"
-            {...register("password", { required: true })}
             id="password"
             className="form-control"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters",
+              },
+              maxLength: {
+                value: 20,
+                message: "Password must not exceed 20 characters",
+              },
+            })}
           />
+
           {errors.password && (
-            <p className="text-danger mt-1">Password is required</p>
+            <p className="text-danger mt-1">{errors.password.message}</p>
           )}
         </div>
 
@@ -93,7 +104,6 @@ function Login() {
             Register here
           </Link>
         </div>
-
       </form>
     </div>
   );

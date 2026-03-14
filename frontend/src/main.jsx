@@ -5,8 +5,8 @@ import App from './App.jsx'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ToastContainer, toast } from 'react-toastify';
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  <>
     <App />
     <ToastContainer />
-  </StrictMode>,
+  </>,
 )

@@ -15,10 +15,10 @@ export const runApi = async (promptText) => {
     // Note: The model name from your list is 'models/gemini-2.5-flash'
     // You can usually omit the 'models/' prefix.
     const response = await ai.models.generateContent({
-      // model: "gemini-flash-latest",
+      model: "gemini-flash-latest",
       // model:"gemini-2.5-pro-preview-tts",
       // model: "gemini-2.5-flash",
-      model: "gemini-2.5-flash-lite",
+      // model: "gemini-2.5-flash-lite",
       //  model:"gemini-2.5-pro",
 
       // model:"gemini-2.0-flash",

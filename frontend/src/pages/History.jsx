@@ -2,20 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 function History() {
   const { user } = useAuthStore();
   const [history, setHistory] = useState([]);
+  const [isBackToTopVisible, setIsBackToTopVisible] = useState(false);
   const navigate = useNavigate();
 
   async function getHistory() {
     try {
       let res = await axios.get(
         `http://localhost:8080/history-api/user-history/${user.id}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       // console.log(res.data.payload);
       setHistory(res.data.payload);
+      if (res.data.payload.length > 6) {
+        setIsBackToTopVisible(true);
+      } else {
+        setIsBackToTopVisible(false);
+      }
     } catch (err) {
       console.log("err in history page...[frontend]", err.message);
     }
@@ -25,51 +31,99 @@ function History() {
     if (user?.id) getHistory();
   }, [user]);
 
+  function backToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Quiz History</h2>
-      <div className="row">
-        {history.map((quiz) => (
-          <div className="col-md-4 mb-4" key={quiz._id}>
-            <div className="card shadow-sm h-100">
+      <h2 className="mb-4 text-center">Quiz History</h2>
+      {history.length === 0 ? (
+        <div className="text-center mt-5">
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+            width="120"
+            className="mb-3"
+            alt="No history"
+          />
 
-              <div className="card-body">
-                <h5 className="card-title">{quiz.topic}</h5>
+          <h5 className="text-muted">No Quiz History Yet</h5>
 
-                <p className="card-text">
-                  <strong>Difficulty:</strong> {quiz.difficultyLevel}
-                </p>
+          <p className="text-muted">
+            Start your first quiz to see results here.
+          </p>
 
-                <p className="card-text">
-                  <strong>Questions:</strong> {quiz.numberQuestions}
-                </p>
-
-                <p className="card-text">
-                  <strong>Score:</strong> {quiz.score}
-                </p>
-
-                <p className="card-text">
-                  <strong>Percentage:</strong> {quiz.percentage}%
-                </p>
-
-                <p className="card-text text-muted">
-                 {/* <strong>Date:</strong>{quiz.createdAt.slice(0,11)} */}
-                  <strong>Date:</strong> {quiz.createdAt ? quiz.createdAt.split("T")[0] : "N/A"}
-                </p>
-
-                <button
-                  className="btn btn-primary w-100"
-                  onClick={() => {navigate(`/entire-quiz-details`,{state:{historyId:quiz._id,userId:user.id}})}}
+          <Link to="/quiz" className="btn btn-success mt-2 quiz-btn">
+            Take a Quiz
+          </Link>
+        </div>
+      ) : (
+        <div>
+          <div className="row">
+            {history.map((quiz) => (
+              <div className="col-md-4 mb-4" key={quiz._id}>
+                <div
+                  className="card h-100 quiz-history-card"
+                  style={{ backgroundColor: "#DFF7F2" }}
                 >
-                  View Details
-                </button>
+                  <div className="card-body">
+                    <h4 className="card-title text-center">
+                      <b>{quiz.topic}</b>
+                    </h4>
 
+                    <p>
+                      <strong>Difficulty:</strong> {quiz.difficultyLevel}
+                    </p>
+                    <p>
+                      <strong>Questions:</strong> {quiz.numberQuestions}
+                    </p>
+                    <p>
+                      <strong>Score:</strong> {quiz.score}
+                    </p>
+                    <p>
+                      <strong>Percentage:</strong> {quiz.percentage}%
+                    </p>
+
+                    <p>
+                      <strong>Date:</strong>{" "}
+                      {quiz.createdAt ? quiz.createdAt.split("T")[0] : "N/A"}
+                    </p>
+
+                    <div className="d-flex justify-content-center mt-3">
+                      <button
+                        className="btn text-center shadow-sm"
+                        style={{
+                          color: "black",
+                          backgroundColor: "#8dd9a8",
+                          border: "1px solid #F5B7B1",
+                          width: "125px",
+                        }}
+                        onClick={() => {
+                          navigate(`/entire-quiz-details`, {
+                            state: { historyId: quiz._id, userId: user.id },
+                          });
+                        }}
+                      >
+                        View Results
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-
-            </div>
+            ))}
           </div>
-        ))}
-      </div>
+
+          {isBackToTopVisible && (
+            <div className="d-flex justify-content-center m-4">
+              <button className="btn btn-success" onClick={backToTop}>
+                Back to Top
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
