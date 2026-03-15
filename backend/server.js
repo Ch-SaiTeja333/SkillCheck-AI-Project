@@ -25,7 +25,7 @@ app.use("/history-api", verifyToken, historyRoutes);
 //! connect to database
 mongoose
   .connect(process.env.MONGO_URL)
-  .then(() => {
+    .then(() => {
     console.log("Database connected successfully");
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
